@@ -1,0 +1,70 @@
+from flask_restx import fields
+from api import rest_api
+
+# Admin Model
+admin_model = rest_api.model("Admin", {
+    "id": fields.Integer,
+    "username": fields.String,
+    "password_hash": fields.String,
+    "created_at": fields.DateTime,
+    "updated_at": fields.DateTime,
+})
+
+# User Model
+user_model = rest_api.model("User", {
+    "id": fields.Integer,
+    "username": fields.String,
+    "email": fields.String,
+    "password_hash": fields.String,
+    "created_at": fields.DateTime,
+    "updated_at": fields.DateTime,
+    "admin_id": fields.Integer,
+})
+
+# Location Model
+location_model = rest_api.model("Location", {
+    "id": fields.Integer,
+    "name": fields.String,
+    "coordinates": fields.String,
+    "population": fields.Integer,
+    "more_details": fields.String,
+    "created_at": fields.DateTime,
+    "updated_at": fields.DateTime,
+})
+
+# Disease Model
+disease_model = rest_api.model("Disease", {
+    "id": fields.Integer,
+    "disease_name": fields.String,
+    "description": fields.String,
+    "symptoms": fields.String,
+    "prevention": fields.String,
+    "treatment": fields.String,
+    "num_of_cases": fields.Integer,
+})
+
+# Disease Location Model
+disease_location_model = rest_api.model("DiseaseLocation", {
+    "id": fields.Integer,
+    "location_id": fields.Integer,
+    "disease_id": fields.Integer,
+    "disease": fields.String,
+    "location": fields.String,
+    "cases": fields.Integer,
+})
+
+# Review Model
+review_model = rest_api.model("Review", {
+    "id": fields.Integer,
+    "user_id": fields.Integer,
+    "location_id": fields.Integer,
+    "review": fields.String,
+})
+
+# Donation Model
+donation_model = rest_api.model("Donation", {
+    "id": fields.Integer,
+    "donor_user_id": fields.Integer,
+    "recipient_location_id": fields.Integer,
+    "amount": fields.Float,
+})
