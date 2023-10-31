@@ -27,7 +27,7 @@ class Location(db.Model):
     __tablename__ = "locations"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), index=True, unique=True)
+    name = db.Column(db.String(50), index=True)
     coordinates = db.Column(db.String)
     population = db.Column(db.Integer)
     more_details = db.Column(db.String)
@@ -38,7 +38,7 @@ class Disease(db.Model):
     __tablename__ = "diseases"
 
     id = db.Column(db.Integer, primary_key=True)
-    disease_name = db.Column(db.String(50), index=True, unique=True)
+    disease_name = db.Column(db.String(50), index=True)
     description = db.Column(db.Text)
     symptoms = db.Column(db.Text)
     prevention = db.Column(db.Text)
