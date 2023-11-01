@@ -81,6 +81,16 @@ class UsersId(Resource):
         else:
             return {"error": "User not found"}, 404
         
+    #delete users
+    def delete(self, id):
+        users = User.query.filter_by(id=id).first()
+        if users:
+            db.session.delete(users)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Users not found"}, 404
+        
         
 
 #LOCATION ROUTES
@@ -127,6 +137,16 @@ class LocationsId(Resource):
             db.session.add(location)
             db.session.commit()
             return location, 200
+        else:
+            return {"error": "Location not found"}, 404
+        
+    #delete locations
+    def delete(self, id):
+        locations = Location.query.filter_by(id=id).first()
+        if locations:
+            db.session.delete(locations)
+            db.session.commit()
+            return {}, 204
         else:
             return {"error": "Location not found"}, 404
         
@@ -179,6 +199,16 @@ class DiseasesId(Resource):
             return diseases, 200
         else:
             return {"error": "Diseases not found"}, 404
+        
+    #delete diseases
+    def delete(self, id):
+        diseases = Disease.query.filter_by(id=id).first()
+        if diseases:
+            db.session.delete(diseases)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Disease not found"}, 404
         
 #DONATIONS ROUTES
 @ns.route("/donations")
@@ -259,3 +289,13 @@ class ReviewsId(Resource):
             return reviews, 200
         else:
             return {"error": "Diseases not found"}, 404
+
+    #delete review
+    def delete(self, id):
+        reviews = Review.query.filter_by(id=id).first()
+        if reviews:
+            db.session.delete(reviews)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Review not found"}, 404
