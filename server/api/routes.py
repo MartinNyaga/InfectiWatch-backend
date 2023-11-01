@@ -30,8 +30,8 @@ class AdminsId(Resource):
 class Users(Resource):
     @ns.marshal_with(user_model)
     def get(self):
-        admins = User.query.all()
-        return admins, 200
+        users = User.query.all()
+        return users, 200
     
     #post users
     @ns.expect(user_input_model)
@@ -246,3 +246,16 @@ class ReviewsId(Resource):
         else:
             return {"error": "Review not found"}, 404
         
+    #Pactch reviews
+    @ns.expect(review_input_model)
+    @ns.marshal_with(review_model)
+    def patch(self, id):
+        reviews = Review.query.get(id)
+        if reviews:
+            for attr in ns.payload:
+                setattr(reviews, attr, ns.payload[attr])
+            db.session.add(reviews)
+            db.session.commit()
+            return reviews, 200
+        else:
+            return {"error": "Diseases not found"}, 404
