@@ -58,6 +58,16 @@ disease_model = rest_api.model("Disease", {
     "num_of_cases": fields.Integer,
 })
 
+#Input Disease Model
+disease_input_model = rest_api.model("Disease_Input", {
+    "disease_name": fields.String,
+    "description": fields.String,
+    "symptoms": fields.String,
+    "prevention": fields.String,
+    "treatment": fields.String,
+    "num_of_cases": fields.Integer,
+})
+
 # Disease Location Model
 disease_location_model = rest_api.model("DiseaseLocation", {
     "id": fields.Integer,

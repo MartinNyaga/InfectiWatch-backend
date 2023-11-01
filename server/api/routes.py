@@ -1,7 +1,7 @@
 from api import app, db
 from flask_restx import Resource, Namespace
 from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model)
+from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 ns = Namespace("/")
@@ -72,6 +72,7 @@ class Locations(Resource):
         locations = Location.query.all()
         return locations, 200
     
+    #locations posts
     @ns.expect(location_input_model)
     @ns.marshal_with(location_model)
     def post(self):
@@ -103,6 +104,23 @@ class Diseases(Resource):
     def get(self):
         diseases = Disease.query.all()
         return diseases, 200
+    
+    #Disease Input
+    @ns.expect(disease_input_model)
+    @ns.marshal_with(disease_model)
+    def post(self):
+        new_disease = Disease(
+            disease_name=ns.payload["disease_name"],
+            description=ns.payload["description"],
+            symptoms=ns.payload["symptoms"],
+            prevention=ns.payload["prevention"],
+            treatment=ns.payload["treatment"],
+            num_of_cases=ns.payload["num_of_cases"],
+        )
+        db.session.add(new_disease)
+        db.session.commit()
+
+        return new_disease, 201
     
 
 @ns.route("/diseases/<int:id>")
