@@ -166,6 +166,20 @@ class DiseasesId(Resource):
         else:
             return {"error": "Disease not found"}, 404
         
+    #Patching diseases
+    @ns.expect(disease_input_model)
+    @ns.marshal_with(disease_model)
+    def patch(self, id):
+        diseases = Donation.query.get(id)
+        if diseases:
+            for attr in ns.payload:
+                setattr(diseases, attr, ns.payload[attr])
+            db.session.add(diseases)
+            db.session.commit()
+            return diseases, 200
+        else:
+            return {"error": "Diseases not found"}, 404
+        
 #DONATIONS ROUTES
 @ns.route("/donations")
 class Donations(Resource):
@@ -197,6 +211,8 @@ class DonationsId(Resource):
             return donations, 200
         else:
             return {"error": "Donation not found"}, 404
+        
+    
         
 #REVIEWS ROUTES
 @ns.route("/reviews")
