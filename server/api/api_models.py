@@ -93,3 +93,10 @@ donation_model = rest_api.model("Donation", {
     "recipient_location_id": fields.Integer,
     "amount": fields.Float,
 })
+
+#Input Donation model
+donation_input_model = rest_api.model("Donation_Input", {
+    "donor_user_id": fields.Integer,
+    "recipient_location_id": fields.Integer,
+    "amount": fields.Float,
+})
