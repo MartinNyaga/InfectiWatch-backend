@@ -190,6 +190,16 @@ class DiseasesId(Resource):
         else:
             return {"error": "Diseases not found"}, 404
         
+    #delete diseases
+    def delete(self, id):
+        diseases = Disease.query.filter_by(id=id).first()
+        if diseases:
+            db.session.delete(diseases)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Disease not found"}, 404
+        
 #DONATIONS ROUTES
 @ns.route("/donations")
 class Donations(Resource):
