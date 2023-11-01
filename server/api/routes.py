@@ -1,6 +1,8 @@
+from api import app, db
 from flask_restx import Resource, Namespace
 from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model)
+from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model)
+from werkzeug.security import generate_password_hash, check_password_hash
 
 ns = Namespace("/")
 
@@ -30,6 +32,25 @@ class Users(Resource):
     def get(self):
         admins = User.query.all()
         return admins, 200
+    
+    @ns.expect(user_input_model)
+    @ns.marshal_with(user_model)
+    def post(self):
+        try:
+            
+            hashed_password = generate_password_hash(password=ns.payload["password_hash"])
+            new_user = User(
+                username=ns.payload["username"],
+                email=ns.payload["email"],
+                password_hash=hashed_password,
+            )
+            db.session.add(new_user)
+            db.session.commit()
+
+            return new_user, 201
+        except Exception as e:
+            print(e.args)
+            return {"error": f"User registration error {str(e)}"}, 400
     
 @ns.route("/users/<int:id>")
 class UsersId(Resource):

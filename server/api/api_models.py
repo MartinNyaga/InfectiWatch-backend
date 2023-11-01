@@ -21,6 +21,13 @@ user_model = rest_api.model("User", {
     "admin_id": fields.Integer,
 })
 
+#Input user model
+user_input_model = rest_api.model("User_Input", {
+    "username": fields.String,
+    "email": fields.String,
+    "password_hash": fields.String,
+})
+
 # Location Model
 location_model = rest_api.model("Location", {
     "id": fields.Integer,
