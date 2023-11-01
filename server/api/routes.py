@@ -130,6 +130,16 @@ class LocationsId(Resource):
         else:
             return {"error": "Location not found"}, 404
         
+    #delete locations
+    def delete(self, id):
+        locations = Location.query.filter_by(id=id).first()
+        if locations:
+            db.session.delete(locations)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Location not found"}, 404
+        
 #DISEASES ROUTES
 @ns.route("/diseases")
 class Diseases(Resource):
