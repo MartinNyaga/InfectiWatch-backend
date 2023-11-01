@@ -1,6 +1,8 @@
+from api import app, db
 from flask_restx import Resource, Namespace
 from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model)
+from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model)
+from werkzeug.security import generate_password_hash, check_password_hash
 
 ns = Namespace("/")
 
@@ -31,6 +33,26 @@ class Users(Resource):
         admins = User.query.all()
         return admins, 200
     
+    #post users
+    @ns.expect(user_input_model)
+    @ns.marshal_with(user_model)
+    def post(self):
+        try:
+            
+            hashed_password = generate_password_hash(password=ns.payload["password_hash"])
+            new_user = User(
+                username=ns.payload["username"],
+                email=ns.payload["email"],
+                password_hash=hashed_password,
+            )
+            db.session.add(new_user)
+            db.session.commit()
+
+            return new_user, 201
+        except Exception as e:
+            print(e.args)
+            return {"error": f"User registration error {str(e)}"}, 400
+    
 @ns.route("/users/<int:id>")
 class UsersId(Resource):
     @ns.marshal_with(admin_model)
@@ -50,6 +72,21 @@ class Locations(Resource):
         locations = Location.query.all()
         return locations, 200
     
+    #locations posts
+    @ns.expect(location_input_model)
+    @ns.marshal_with(location_model)
+    def post(self):
+        new_location = Location(
+            name=ns.payload["name"],
+            coordinates=ns.payload["coordinates"],
+            population=ns.payload["population"],
+            more_details=ns.payload["more_details"],
+        )
+        db.session.add(new_location)
+        db.session.commit()
+
+        return new_location, 201
+    
 @ns.route("/location/<int:id>")
 class LocationsId(Resource):
     @ns.marshal_with(location_model)
@@ -67,6 +104,23 @@ class Diseases(Resource):
     def get(self):
         diseases = Disease.query.all()
         return diseases, 200
+    
+    #Disease Input
+    @ns.expect(disease_input_model)
+    @ns.marshal_with(disease_model)
+    def post(self):
+        new_disease = Disease(
+            disease_name=ns.payload["disease_name"],
+            description=ns.payload["description"],
+            symptoms=ns.payload["symptoms"],
+            prevention=ns.payload["prevention"],
+            treatment=ns.payload["treatment"],
+            num_of_cases=ns.payload["num_of_cases"],
+        )
+        db.session.add(new_disease)
+        db.session.commit()
+
+        return new_disease, 201
     
 
 @ns.route("/diseases/<int:id>")
@@ -86,6 +140,20 @@ class Donations(Resource):
     def get(self):
         donations = Donation.query.all()
         return donations, 200
+    
+    #input donations
+    @ns.expect(donation_input_model)
+    @ns.marshal_with(donation_model)
+    def post(self):
+        new_donation = Donation(
+            donor_user_id=ns.payload["donor_user_id"],
+            recipient_location_id=ns.payload["recipient_location_id"],
+            amount=ns.payload["amount"],
+        )
+        db.session.add(new_donation)
+        db.session.commit()
+
+        return new_donation, 201
     
 @ns.route("/donations/<int:id>")
 class DonationsId(Resource):

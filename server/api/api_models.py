@@ -21,6 +21,13 @@ user_model = rest_api.model("User", {
     "admin_id": fields.Integer,
 })
 
+#Input user model
+user_input_model = rest_api.model("User_Input", {
+    "username": fields.String,
+    "email": fields.String,
+    "password_hash": fields.String,
+})
+
 # Location Model
 location_model = rest_api.model("Location", {
     "id": fields.Integer,
@@ -32,9 +39,27 @@ location_model = rest_api.model("Location", {
     "updated_at": fields.DateTime,
 })
 
+#Input Location model
+location_input_model = rest_api.model("Location_Input", {
+    "name": fields.String,
+    "coordinates": fields.String,
+    "population": fields.Integer,
+    "more_details": fields.String,
+})
+
 # Disease Model
 disease_model = rest_api.model("Disease", {
     "id": fields.Integer,
+    "disease_name": fields.String,
+    "description": fields.String,
+    "symptoms": fields.String,
+    "prevention": fields.String,
+    "treatment": fields.String,
+    "num_of_cases": fields.Integer,
+})
+
+#Input Disease Model
+disease_input_model = rest_api.model("Disease_Input", {
     "disease_name": fields.String,
     "description": fields.String,
     "symptoms": fields.String,
@@ -64,6 +89,13 @@ review_model = rest_api.model("Review", {
 # Donation Model
 donation_model = rest_api.model("Donation", {
     "id": fields.Integer,
+    "donor_user_id": fields.Integer,
+    "recipient_location_id": fields.Integer,
+    "amount": fields.Float,
+})
+
+#Input Donation model
+donation_input_model = rest_api.model("Donation_Input", {
     "donor_user_id": fields.Integer,
     "recipient_location_id": fields.Integer,
     "amount": fields.Float,
