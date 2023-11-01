@@ -1,7 +1,7 @@
 from api import app, db
 from flask_restx import Resource, Namespace
 from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model)
+from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 ns = Namespace("/")
@@ -30,8 +30,8 @@ class AdminsId(Resource):
 class Users(Resource):
     @ns.marshal_with(user_model)
     def get(self):
-        admins = User.query.all()
-        return admins, 200
+        users = User.query.all()
+        return users, 200
     
     #post users
     @ns.expect(user_input_model)
@@ -62,6 +62,25 @@ class UsersId(Resource):
             return user, 200
         else:
             return {"error": "User not found"}, 404
+        
+    #patch users
+    @ns.expect(user_input_model)
+    @ns.marshal_with(user_model)
+    def patch(self, id):
+        hashed_password = generate_password_hash(password=ns.payload["password_hash"])
+        user = User.query.filter_by(id=id).first()
+        if user:
+            for attr in ns.payload:
+                if attr == "password_password_hash":
+                    setattr(user, attr, hashed_password)
+                else:
+                    setattr(user, attr, ns.payload[attr])
+            db.session.add(user)
+            db.session.commit()
+            return user, 200
+        else:
+            return {"error": "User not found"}, 404
+        
         
 
 #LOCATION ROUTES
@@ -94,6 +113,20 @@ class LocationsId(Resource):
         locations = Location.query.filter_by(id=id).first()
         if locations:
             return locations, 200
+        else:
+            return {"error": "Location not found"}, 404
+        
+    #patch location
+    @ns.expect(location_input_model)
+    @ns.marshal_with(location_model)
+    def patch(self, id):
+        location = Location.query.get(id)
+        if location:
+            for attr in ns.payload:
+                setattr(location, attr, ns.payload[attr])
+            db.session.add(location)
+            db.session.commit()
+            return location, 200
         else:
             return {"error": "Location not found"}, 404
         
@@ -133,6 +166,20 @@ class DiseasesId(Resource):
         else:
             return {"error": "Disease not found"}, 404
         
+    #Patching diseases
+    @ns.expect(disease_input_model)
+    @ns.marshal_with(disease_model)
+    def patch(self, id):
+        diseases = Donation.query.get(id)
+        if diseases:
+            for attr in ns.payload:
+                setattr(diseases, attr, ns.payload[attr])
+            db.session.add(diseases)
+            db.session.commit()
+            return diseases, 200
+        else:
+            return {"error": "Diseases not found"}, 404
+        
 #DONATIONS ROUTES
 @ns.route("/donations")
 class Donations(Resource):
@@ -165,6 +212,8 @@ class DonationsId(Resource):
         else:
             return {"error": "Donation not found"}, 404
         
+    
+        
 #REVIEWS ROUTES
 @ns.route("/reviews")
 class Reviews(Resource):
@@ -172,6 +221,20 @@ class Reviews(Resource):
     def get(self):
         reviews = Review.query.all()
         return reviews, 200
+    
+    #reviews posts
+    @ns.expect(review_input_model)
+    @ns.marshal_with(review_model)
+    def post(self):
+        new_review = Review(
+            user_id=ns.payload["user_id"],
+            location_id=ns.payload["location_id"],
+            review=ns.payload["review"],
+        )
+        db.session.add(new_review)
+        db.session.commit()
+
+        return new_review, 201
     
 @ns.route("/reviews/<int:id>")
 class ReviewsId(Resource):
@@ -183,3 +246,16 @@ class ReviewsId(Resource):
         else:
             return {"error": "Review not found"}, 404
         
+    #Pactch reviews
+    @ns.expect(review_input_model)
+    @ns.marshal_with(review_model)
+    def patch(self, id):
+        reviews = Review.query.get(id)
+        if reviews:
+            for attr in ns.payload:
+                setattr(reviews, attr, ns.payload[attr])
+            db.session.add(reviews)
+            db.session.commit()
+            return reviews, 200
+        else:
+            return {"error": "Diseases not found"}, 404

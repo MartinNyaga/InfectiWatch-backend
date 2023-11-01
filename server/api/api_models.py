@@ -85,6 +85,12 @@ review_model = rest_api.model("Review", {
     "location_id": fields.Integer,
     "review": fields.String,
 })
+#Input Review model
+review_input_model = rest_api.model("Review_Input", {
+    "user_id": fields.Integer,
+    "location_id": fields.Integer,
+    "review": fields.String,
+})
 
 # Donation Model
 donation_model = rest_api.model("Donation", {
