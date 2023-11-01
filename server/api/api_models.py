@@ -39,6 +39,14 @@ location_model = rest_api.model("Location", {
     "updated_at": fields.DateTime,
 })
 
+#Input Location model
+location_input_model = rest_api.model("Location_Input", {
+    "name": fields.String,
+    "coordinates": fields.String,
+    "population": fields.Integer,
+    "more_details": fields.String,
+})
+
 # Disease Model
 disease_model = rest_api.model("Disease", {
     "id": fields.Integer,
