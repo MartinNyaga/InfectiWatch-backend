@@ -81,6 +81,16 @@ class UsersId(Resource):
         else:
             return {"error": "User not found"}, 404
         
+    #delete users
+    def delete(self, id):
+        users = User.query.filter_by(id=id).first()
+        if users:
+            db.session.delete(users)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Users not found"}, 404
+        
         
 
 #LOCATION ROUTES
