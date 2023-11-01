@@ -259,3 +259,13 @@ class ReviewsId(Resource):
             return reviews, 200
         else:
             return {"error": "Diseases not found"}, 404
+
+    #delete review
+    def delete(self, id):
+        reviews = Review.query.filter_by(id=id).first()
+        if reviews:
+            db.session.delete(reviews)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Review not found"}, 404
