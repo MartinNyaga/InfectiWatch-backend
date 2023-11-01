@@ -116,6 +116,20 @@ class LocationsId(Resource):
         else:
             return {"error": "Location not found"}, 404
         
+    #patch location
+    @ns.expect(location_input_model)
+    @ns.marshal_with(location_model)
+    def patch(self, id):
+        location = Location.query.get(id)
+        if location:
+            for attr in ns.payload:
+                setattr(location, attr, ns.payload[attr])
+            db.session.add(location)
+            db.session.commit()
+            return location, 200
+        else:
+            return {"error": "Location not found"}, 404
+        
 #DISEASES ROUTES
 @ns.route("/diseases")
 class Diseases(Resource):
