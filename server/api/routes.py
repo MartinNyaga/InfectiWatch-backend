@@ -1,7 +1,7 @@
 from api import app, db
 from flask_restx import Resource, Namespace
 from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model)
+from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 ns = Namespace("/")
@@ -62,6 +62,25 @@ class UsersId(Resource):
             return user, 200
         else:
             return {"error": "User not found"}, 404
+        
+    #patch users
+    @ns.expect(user_input_model)
+    @ns.marshal_with(user_model)
+    def patch(self, id):
+        hashed_password = generate_password_hash(password=ns.payload["password_hash"])
+        user = User.query.filter_by(id=id).first()
+        if user:
+            for attr in ns.payload:
+                if attr == "password_password_hash":
+                    setattr(user, attr, hashed_password)
+                else:
+                    setattr(user, attr, ns.payload[attr])
+            db.session.add(user)
+            db.session.commit()
+            return user, 200
+        else:
+            return {"error": "User not found"}, 404
+        
         
 
 #LOCATION ROUTES
@@ -172,6 +191,20 @@ class Reviews(Resource):
     def get(self):
         reviews = Review.query.all()
         return reviews, 200
+    
+    #reviews posts
+    @ns.expect(review_input_model)
+    @ns.marshal_with(review_model)
+    def post(self):
+        new_review = Review(
+            user_id=ns.payload["user_id"],
+            location_id=ns.payload["location_id"],
+            review=ns.payload["review"],
+        )
+        db.session.add(new_review)
+        db.session.commit()
+
+        return new_review, 201
     
 @ns.route("/reviews/<int:id>")
 class ReviewsId(Resource):
