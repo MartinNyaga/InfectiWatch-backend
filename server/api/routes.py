@@ -308,9 +308,9 @@ class ReviewsId(Resource):
             return {"error": "Review not found"}, 404
 
 #Emergency Route
-ns.route("/emergencies")
+@ns.route("/emergencies")
 class Emergencies(Resource):
-    ns.marshal_with(emergency_model)
+    @ns.marshal_with(emergency_model)
     def get(self):
         emergencies = Emergency.query.all()
         return emergencies, 200
