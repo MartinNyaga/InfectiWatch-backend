@@ -1,8 +1,8 @@
 import re
 from api import app, db
 from flask_restx import Resource, Namespace
-from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model)
+from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location, Emergency
+from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 ns = Namespace("/")
@@ -306,3 +306,11 @@ class ReviewsId(Resource):
             return {}, 204
         else:
             return {"error": "Review not found"}, 404
+
+#Emergency Route
+ns.route("/emergencies")
+class Emergencies(Resource):
+    ns.marshal_with(emergency_model)
+    def get(self):
+        emergencies = Emergency.query.all()
+        return emergencies, 200
