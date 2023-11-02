@@ -314,3 +314,28 @@ class Emergencies(Resource):
     def get(self):
         emergencies = Emergency.query.all()
         return emergencies, 200
+    
+     #emergencies posts
+    @ns.expect(emergency_input_model)
+    @ns.marshal_with(emergency_model)
+    def post(self):
+        new_emergency = Emergency(
+            sender_user_id=ns.payload["sender_user_id"],
+            sender_location=ns.payload["sender_location"],
+            condition=ns.payload["condition"],
+        )
+        db.session.add(new_emergency)
+        db.session.commit()
+
+        return new_emergency, 201
+    
+
+@ns.route("/emergencies/<int:id>")
+class EmergenciesId(Resource):
+    @ns.marshal_with(emergency_model)
+    def get(self, id):
+        emergencies = Emergency.query.filter_by(id=id).first()
+        if emergencies:
+            return emergencies, 200
+        else:
+            return {"error": "Emergency not found"}, 404
