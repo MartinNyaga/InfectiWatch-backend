@@ -1,3 +1,4 @@
+import re
 from api import app, db
 from flask_restx import Resource, Namespace
 from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location
@@ -38,6 +39,12 @@ class Users(Resource):
     @ns.marshal_with(user_model)
     def post(self):
         try:
+            email = ns.payload["email"]
+            
+            # Validate email
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email): # checks if the structure of the email is valid or not.
+                return {"error": "Invalid email format"}, 400
+
             
             hashed_password = generate_password_hash(password=ns.payload["password_hash"])
             new_user = User(
