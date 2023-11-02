@@ -283,7 +283,7 @@ class ReviewsId(Resource):
         else:
             return {"error": "Review not found"}, 404
         
-    #Pactch reviews
+    #Patch reviews
     @ns.expect(review_input_model)
     @ns.marshal_with(review_model)
     def patch(self, id):
@@ -340,7 +340,7 @@ class EmergenciesId(Resource):
         else:
             return {"error": "Emergency not found"}, 404
         
-    #Pactch emergencies
+    #Patch emergencies
     @ns.expect(emergency_input_model)
     @ns.marshal_with(emergency_model)
     def patch(self, id):
@@ -353,3 +353,13 @@ class EmergenciesId(Resource):
             return emergencies, 200
         else:
             return {"error": "Emergencies not found"}, 404
+        
+    #delete emergencies
+    def delete(self, id):
+        emergencies = Emergency.query.filter_by(id=id).first()
+        if emergencies:
+            db.session.delete(emergencies)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Emergency not found"}, 404
