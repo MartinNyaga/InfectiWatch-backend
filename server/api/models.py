@@ -71,3 +71,11 @@ class Donation(db.Model):
     recipient_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
 
+class Emergency(db.Model):
+    __tablename__ = 'emergencies'
+
+    id = db.Column(db.Integer, primary_key=True)
+    condition = db.Column(db.String)
+    sender_location = db.Column(db.String, db.ForeignKey('locations.id'), nullable=False)
+    sender_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
