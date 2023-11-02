@@ -339,3 +339,17 @@ class EmergenciesId(Resource):
             return emergencies, 200
         else:
             return {"error": "Emergency not found"}, 404
+        
+    #Pactch emergencies
+    @ns.expect(emergency_input_model)
+    @ns.marshal_with(emergency_model)
+    def patch(self, id):
+        emergencies = Emergency.query.get(id)
+        if emergencies:
+            for attr in ns.payload:
+                setattr(emergencies, attr, ns.payload[attr])
+            db.session.add(emergencies)
+            db.session.commit()
+            return emergencies, 200
+        else:
+            return {"error": "Emergencies not found"}, 404
