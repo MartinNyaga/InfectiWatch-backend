@@ -106,3 +106,19 @@ donation_input_model = rest_api.model("Donation_Input", {
     "recipient_location_id": fields.Integer,
     "amount": fields.Float,
 })
+
+#Emergency Model
+emergency_model = rest_api.model('Emergency',{
+    'id':fields.Integer,
+    'condition':fields.String,
+    'sender_user_id':fields.Integer,
+    'sender_location':fields.Integer,
+
+})
+
+#Input Emergency Model
+emergency_input_model=rest_api.model('Emergency_Input',{
+    'condition':fields.String,
+    'sender_user_id':fields.Integer,
+    'sender_location':fields.Integer,
+})

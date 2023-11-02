@@ -2,7 +2,7 @@ from faker import Faker
 import random
 from api import app
 
-from api.models import db, Admin, User, Location, Disease, Disease_Location, Review, Donation
+from api.models import db, Admin, User, Location, Disease, Disease_Location, Review, Donation, Emergency
 
 with app.app_context():
     fake = Faker()
@@ -195,4 +195,16 @@ with app.app_context():
         donations.append(donation)
 
     db.session.add_all(donations)
+    db.session.commit()
+
+    emergencies = []
+    for i in range(10):
+        emergency = Emergency(
+            condition = random.choice(common_diseases),
+            sender_user_id = random.randint(1, len(User.query.all())),
+            sender_location = random.randint(1, len(Location.query.all())),
+        )
+        emergencies.append(emergency)
+
+    db.session.add_all(emergencies)
     db.session.commit()

@@ -1,8 +1,8 @@
 import re
 from api import app, db
 from flask_restx import Resource, Namespace
-from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model)
+from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location, Emergency
+from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 ns = Namespace("/")
@@ -283,7 +283,7 @@ class ReviewsId(Resource):
         else:
             return {"error": "Review not found"}, 404
         
-    #Pactch reviews
+    #Patch reviews
     @ns.expect(review_input_model)
     @ns.marshal_with(review_model)
     def patch(self, id):
@@ -306,3 +306,60 @@ class ReviewsId(Resource):
             return {}, 204
         else:
             return {"error": "Review not found"}, 404
+
+#Emergency Route
+@ns.route("/emergencies")
+class Emergencies(Resource):
+    @ns.marshal_with(emergency_model)
+    def get(self):
+        emergencies = Emergency.query.all()
+        return emergencies, 200
+    
+     #emergencies posts
+    @ns.expect(emergency_input_model)
+    @ns.marshal_with(emergency_model)
+    def post(self):
+        new_emergency = Emergency(
+            sender_user_id=ns.payload["sender_user_id"],
+            sender_location=ns.payload["sender_location"],
+            condition=ns.payload["condition"],
+        )
+        db.session.add(new_emergency)
+        db.session.commit()
+
+        return new_emergency, 201
+    
+
+@ns.route("/emergencies/<int:id>")
+class EmergenciesId(Resource):
+    @ns.marshal_with(emergency_model)
+    def get(self, id):
+        emergencies = Emergency.query.filter_by(id=id).first()
+        if emergencies:
+            return emergencies, 200
+        else:
+            return {"error": "Emergency not found"}, 404
+        
+    #Patch emergencies
+    @ns.expect(emergency_input_model)
+    @ns.marshal_with(emergency_model)
+    def patch(self, id):
+        emergencies = Emergency.query.get(id)
+        if emergencies:
+            for attr in ns.payload:
+                setattr(emergencies, attr, ns.payload[attr])
+            db.session.add(emergencies)
+            db.session.commit()
+            return emergencies, 200
+        else:
+            return {"error": "Emergencies not found"}, 404
+        
+    #delete emergencies
+    def delete(self, id):
+        emergencies = Emergency.query.filter_by(id=id).first()
+        if emergencies:
+            db.session.delete(emergencies)
+            db.session.commit()
+            return {}, 204
+        else:
+            return {"error": "Emergency not found"}, 404
