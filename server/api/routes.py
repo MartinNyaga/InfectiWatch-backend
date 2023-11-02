@@ -2,7 +2,7 @@ import re
 from api import app, db
 from flask_restx import Resource, Namespace
 from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location, Emergency
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model)
+from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model, user_login_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 ns = Namespace("/")
@@ -78,7 +78,7 @@ class UsersId(Resource):
         user = User.query.filter_by(id=id).first()
         if user:
             for attr in ns.payload:
-                if attr == "password_password_hash":
+                if attr == "password_hash":
                     setattr(user, attr, hashed_password)
                 else:
                     setattr(user, attr, ns.payload[attr])
@@ -97,6 +97,24 @@ class UsersId(Resource):
             return {}, 204
         else:
             return {"error": "Users not found"}, 404
+        
+#User Log In
+@ns.route("/login")
+class UserLoginResource(Resource):
+    @ns.expect(user_login_model)
+    def post(self):
+
+        pass
+#        user = User.query.filter_by(username=ns.payload["username"]).first()
+#        if not user:
+#            return {"error": "User does not exist"}, 401
+#        if not check_password_hash(user.password_hash, ns.payload["password_hash"]):
+#            return {"error": "Incorrect password, Try Again"}, 401
+#        user_dic = {
+#            "id": user.id,
+#            "username": user.username,
+#        }
+#        return {"access_token": create_access_token(user_dic)}
         
         
 
