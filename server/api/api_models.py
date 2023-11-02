@@ -21,12 +21,21 @@ user_model = rest_api.model("User", {
     "admin_id": fields.Integer,
 })
 
-#Input user model
+#Input user model(Create User in sign up)
 user_input_model = rest_api.model("User_Input", {
     "username": fields.String,
     "email": fields.String,
     "password_hash": fields.String,
 })
+
+#Log in Model
+user_login_model = rest_api.model(
+    "User_Login",
+    {
+        "username": fields.String,
+        "password_hash": fields.String,
+    },
+)
 
 # Location Model
 location_model = rest_api.model("Location", {
