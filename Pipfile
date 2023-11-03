@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-migrate = "*"
+flask-restful = "*"
+flask-sqlalchemy = "*"
+importlib-metadata = "*"
+importlib-resources = "*"
+ipdb = "*"
+marshmallow = "*"
+Faker = "*"
+flask-swagger-ui = "*"
+gunicorn = "*"
+python-dotenv = "*"
+werkzeug = "*"
+pyjwt = "*"
+flask-wtf = "*"
+flask-restx = "*"
+flask-jwt-extended = "*"
+flask-cors = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
