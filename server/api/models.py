@@ -23,6 +23,12 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime(), default=datetime.utcnow(), onupdate=datetime.utcnow())
     admin_id = db.Column(db.Integer, db.ForeignKey("admins.id"))
 
+    
+    reviews = db.relationship("Review", backref="user")
+    donations = db.relationship("Donation", backref="user")
+    emrgencies = db.Relationship("Emergency", backref="user")
+
+
 class Location(db.Model):
     __tablename__ = "locations"
 
@@ -33,6 +39,10 @@ class Location(db.Model):
     more_details = db.Column(db.String)
     created_at = db.Column(db.DateTime(), default=datetime.utcnow())
     updated_at = db.Column(db.DateTime(), default=datetime.utcnow(), onupdate=datetime.utcnow())
+
+    reviews = db.Relationship("Review", backref="location")
+    donations = db.relationship("Donation", backref="location")
+    emrgencies = db.Relationship("Emergency", backref="location")
 
 class Disease(db.Model):
     __tablename__ = "diseases"
