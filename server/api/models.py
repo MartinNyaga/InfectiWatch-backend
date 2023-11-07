@@ -3,14 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 
-class Admin(db.Model):
-    __tablename__ = 'admins'
+class Role(db.Model):
+    __tablename__ = 'roles'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128))
-    created_at = db.Column(db.DateTime(), default=datetime.utcnow())
-    updated_at = db.Column(db.DateTime(), onupdate=datetime.utcnow())
+    role_given = db.Column(db.String)
     
 class User(db.Model):
     __tablename__ = 'users'
@@ -21,12 +18,13 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     created_at = db.Column(db.DateTime(), default=datetime.utcnow())
     updated_at = db.Column(db.DateTime(), default=datetime.utcnow(), onupdate=datetime.utcnow())
-    admin_id = db.Column(db.Integer, db.ForeignKey("admins.id"))
+    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
 
     
     reviews = db.relationship("Review", backref="user")
     donations = db.relationship("Donation", backref="user")
     emrgencies = db.Relationship("Emergency", backref="user")
+    roles = db.relationship('Role', backref='role')
 
 
 class Location(db.Model):
