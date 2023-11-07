@@ -2,12 +2,9 @@ from flask_restx import fields
 from api import rest_api
 
 # Admin Model
-admin_model = rest_api.model("Admin", {
+role_model = rest_api.model("Role", {
     "id": fields.Integer,
-    "username": fields.String,
-    "password_hash": fields.String,
-    "created_at": fields.DateTime,
-    "updated_at": fields.DateTime,
+    "role_given": fields.String,
 })
 
 # User Model
@@ -18,7 +15,7 @@ user_model = rest_api.model("User", {
     "password_hash": fields.String,
     "created_at": fields.DateTime,
     "updated_at": fields.DateTime,
-    "admin_id": fields.Integer,
+    "role_id": fields.Integer,
 })
 
 #Input user model(Create User in sign up)
@@ -26,6 +23,7 @@ user_input_model = rest_api.model("User_Input", {
     "username": fields.String,
     "email": fields.String,
     "password_hash": fields.String,
+    "role_id": fields.Integer,
 })
 
 #Log in Model
@@ -99,6 +97,7 @@ review_input_model = rest_api.model("Review_Input", {
     "user_id": fields.Integer,
     "location_id": fields.Integer,
     "review": fields.String,
+    "user": fields.Nested(user_model),
 })
 
 # Donation Model

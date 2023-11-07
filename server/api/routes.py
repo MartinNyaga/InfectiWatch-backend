@@ -3,8 +3,8 @@ from api import app, db
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 import jwt
-from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location, Emergency
-from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model, user_login_model)
+from .models import Role, User, Location, Disease, Donation, Review, Disease_Location, Emergency
+from .api_models import ( role_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model, user_login_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -15,39 +15,40 @@ authorizations = {
 ns = Namespace("/", authorizations=authorizations)
 
 #ADMIN ROUTES
-@ns.route("/admins")
-class Admins(Resource):
-    @ns.marshal_with(admin_model)
+@ns.route("/roles")
+class Roles(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
+    @ns.marshal_with(role_model)
     def get(self):
-        admins = Admin.query.all()
-        return admins, 200
+        roles = Role.query.all()
+        return roles, 200
   
 @ns.route("/admins/<int:id>")
-class AdminsId(Resource):
-    @ns.marshal_with(admin_model)
+class RolesId(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
+    @ns.marshal_with(role_model)
     def get(self, id):
-        admin = Admin.query.filter_by(id=id).first()
-        if admin:
-            return admin, 200
+        roles = Role.query.filter_by(id=id).first()
+        if roles:
+            return roles, 200
         else:
-            return {"error": "Admin not found"}, 404
+            return {"error": "roles not found"}, 404
 
 
 #USERS ROUTES
 @ns.route("/users")
 class Users(Resource):
-    method_decorators = [jwt_required()]
-
-    @ns.doc(security="jsonWebToken")
+    
     @ns.marshal_with(user_model)
     def get(self):
         users = User.query.all()
         return users, 200
     
     #post users
-    method_decorators = [jwt_required()]
-
-    @ns.doc(security="jsonWebToken")
     @ns.expect(user_input_model)
     @ns.marshal_with(user_model)
     def post(self):
@@ -78,7 +79,7 @@ class UsersId(Resource):
     method_decorators = [jwt_required()]
 
     @ns.doc(security="jsonWebToken")
-    @ns.marshal_with(admin_model)
+    @ns.marshal_with(user_model)
     def get(self, id):
         user = User.query.filter_by(id=id).first()
         if user:
