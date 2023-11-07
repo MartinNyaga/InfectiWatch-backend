@@ -45,6 +45,9 @@ class Users(Resource):
         return users, 200
     
     #post users
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(user_input_model)
     @ns.marshal_with(user_model)
     def post(self):
@@ -84,6 +87,9 @@ class UsersId(Resource):
             return {"error": "User not found"}, 404
         
     #patch users
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(user_input_model)
     @ns.marshal_with(user_model)
     def patch(self, id):
@@ -102,6 +108,9 @@ class UsersId(Resource):
             return {"error": "User not found"}, 404
         
     #delete users
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     def delete(self, id):
         users = User.query.filter_by(id=id).first()
         if users:
@@ -142,6 +151,9 @@ class Locations(Resource):
         return locations, 200
     
     #locations posts
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(location_input_model)
     @ns.marshal_with(location_model)
     def post(self):
@@ -170,6 +182,9 @@ class LocationsId(Resource):
             return {"error": "Location not found"}, 404
         
     #patch location
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(location_input_model)
     @ns.marshal_with(location_model)
     def patch(self, id):
@@ -184,6 +199,9 @@ class LocationsId(Resource):
             return {"error": "Location not found"}, 404
         
     #delete locations
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     def delete(self, id):
         locations = Location.query.filter_by(id=id).first()
         if locations:
@@ -205,6 +223,9 @@ class Diseases(Resource):
         return diseases, 200
     
     #Disease Input
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(disease_input_model)
     @ns.marshal_with(disease_model)
     def post(self):
@@ -236,6 +257,9 @@ class DiseasesId(Resource):
             return {"error": "Disease not found"}, 404
         
     #Patching diseases
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(disease_input_model)
     @ns.marshal_with(disease_model)
     def patch(self, id):
@@ -250,6 +274,9 @@ class DiseasesId(Resource):
             return {"error": "Diseases not found"}, 404
         
     #delete diseases
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     def delete(self, id):
         diseases = Disease.query.filter_by(id=id).first()
         if diseases:
@@ -271,6 +298,9 @@ class Donations(Resource):
         return donations, 200
     
     #input donations
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(donation_input_model)
     @ns.marshal_with(donation_model)
     def post(self):
@@ -311,6 +341,9 @@ class Reviews(Resource):
         return reviews, 200
     
     #reviews posts
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(review_input_model)
     @ns.marshal_with(review_model)
     def post(self):
@@ -338,6 +371,9 @@ class ReviewsId(Resource):
             return {"error": "Review not found"}, 404
         
     #Patch reviews
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(review_input_model)
     @ns.marshal_with(review_model)
     def patch(self, id):
@@ -352,6 +388,9 @@ class ReviewsId(Resource):
             return {"error": "Diseases not found"}, 404
 
     #delete review
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     def delete(self, id):
         reviews = Review.query.filter_by(id=id).first()
         if reviews:
@@ -373,6 +412,9 @@ class Emergencies(Resource):
         return emergencies, 200
     
      #emergencies posts
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(emergency_input_model)
     @ns.marshal_with(emergency_model)
     def post(self):
@@ -401,6 +443,9 @@ class EmergenciesId(Resource):
             return {"error": "Emergency not found"}, 404
         
     #Patch emergencies
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.expect(emergency_input_model)
     @ns.marshal_with(emergency_model)
     def patch(self, id):
@@ -415,6 +460,9 @@ class EmergenciesId(Resource):
             return {"error": "Emergencies not found"}, 404
         
     #delete emergencies
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     def delete(self, id):
         emergencies = Emergency.query.filter_by(id=id).first()
         if emergencies:
