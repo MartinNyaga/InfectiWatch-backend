@@ -1,11 +1,18 @@
 import re
 from api import app, db
 from flask_restx import Resource, Namespace
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+import jwt
 from .models import Admin, User, Location, Disease, Donation, Review, Disease_Location, Emergency
 from .api_models import ( admin_model, user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model, user_login_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
-ns = Namespace("/")
+
+authorizations = {
+    "jsonWebToken": {"type": "apiKey", "in": "header", "name": "Authorization"}
+}
+
+ns = Namespace("/", authorizations=authorizations)
 
 #ADMIN ROUTES
 @ns.route("/admins")
@@ -29,6 +36,9 @@ class AdminsId(Resource):
 #USERS ROUTES
 @ns.route("/users")
 class Users(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(user_model)
     def get(self):
         users = User.query.all()
@@ -62,6 +72,9 @@ class Users(Resource):
     
 @ns.route("/users/<int:id>")
 class UsersId(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(admin_model)
     def get(self, id):
         user = User.query.filter_by(id=id).first()
@@ -104,23 +117,25 @@ class UserLoginResource(Resource):
     @ns.expect(user_login_model)
     def post(self):
 
-        pass
-#        user = User.query.filter_by(username=ns.payload["username"]).first()
-#        if not user:
-#            return {"error": "User does not exist"}, 401
-#        if not check_password_hash(user.password_hash, ns.payload["password_hash"]):
-#            return {"error": "Incorrect password, Try Again"}, 401
-#        user_dic = {
-#            "id": user.id,
-#            "username": user.username,
-#        }
-#        return {"access_token": create_access_token(user_dic)}
+        user = User.query.filter_by(username=ns.payload["username"]).first()
+        if not user:
+            return {"error": "User does not exist"}, 401
+        if not check_password_hash(user.password_hash, ns.payload["password_hash"]):
+            return {"error": "Incorrect password, Try Again"}, 401
+        user_dic = {
+            "id": user.id,
+            "username": user.username,
+        }
+        return {"access_token": create_access_token(user_dic)}
         
         
 
 #LOCATION ROUTES
 @ns.route("/location")
 class Locations(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(location_model)
     def get(self):
         locations = Location.query.all()
@@ -143,6 +158,9 @@ class Locations(Resource):
     
 @ns.route("/location/<int:id>")
 class LocationsId(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(location_model)
     def get(self, id):
         locations = Location.query.filter_by(id=id).first()
@@ -178,6 +196,9 @@ class LocationsId(Resource):
 #DISEASES ROUTES
 @ns.route("/diseases")
 class Diseases(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(disease_model)
     def get(self):
         diseases = Disease.query.all()
@@ -203,6 +224,9 @@ class Diseases(Resource):
 
 @ns.route("/diseases/<int:id>")
 class DiseasesId(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(disease_model)
     def get(self, id):
         diseases = Disease.query.filter_by(id=id).first()
@@ -238,6 +262,9 @@ class DiseasesId(Resource):
 #DONATIONS ROUTES
 @ns.route("/donations")
 class Donations(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(donation_model)
     def get(self):
         donations = Donation.query.all()
@@ -259,6 +286,9 @@ class Donations(Resource):
     
 @ns.route("/donations/<int:id>")
 class DonationsId(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(donation_model)
     def get(self, id):
         donations = Donation.query.filter_by(id=id).first()
@@ -272,6 +302,9 @@ class DonationsId(Resource):
 #REVIEWS ROUTES
 @ns.route("/reviews")
 class Reviews(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(review_model)
     def get(self):
         reviews = Review.query.all()
@@ -293,6 +326,9 @@ class Reviews(Resource):
     
 @ns.route("/reviews/<int:id>")
 class ReviewsId(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(review_model)
     def get(self, id):
         reviews = Review.query.filter_by(id=id).first()
@@ -328,6 +364,9 @@ class ReviewsId(Resource):
 #Emergency Route
 @ns.route("/emergencies")
 class Emergencies(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(emergency_model)
     def get(self):
         emergencies = Emergency.query.all()
@@ -350,6 +389,9 @@ class Emergencies(Resource):
 
 @ns.route("/emergencies/<int:id>")
 class EmergenciesId(Resource):
+    method_decorators = [jwt_required()]
+
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_with(emergency_model)
     def get(self, id):
         emergencies = Emergency.query.filter_by(id=id).first()
