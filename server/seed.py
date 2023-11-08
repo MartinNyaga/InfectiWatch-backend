@@ -2,12 +2,12 @@ from faker import Faker
 import random
 from api import app
 
-from api.models import db, Admin, User, Location, Disease, Disease_Location, Review, Donation, Emergency
+from api.models import db, Role, User, Location, Disease, Disease_Location, Review, Donation, Emergency
 
 with app.app_context():
     fake = Faker()
 
-    Admin.query.delete()
+    
     User.query.delete()
     Location.query.delete()
     Disease.query.delete()
@@ -101,18 +101,6 @@ with app.app_context():
 
 
 
-    admins = []
-    for i in range(10):
-        admin = Admin(
-            username=fake.user_name(),
-            password_hash=fake.password(),
-            created_at=fake.date_time(),
-            updated_at=fake.date_time(),
-        )
-        admins.append(admin)
-    
-    db.session.add_all(admins)
-    db.session.commit()
 
     users = []
     for i in range(20):
@@ -120,6 +108,7 @@ with app.app_context():
             username=fake.name(),
             email=fake.email(),
             password_hash=fake.password(),
+            role_id = random.randint(1, len(Role.query.all())),
             created_at=fake.date_time(),
             updated_at=fake.date_time(),
         )
