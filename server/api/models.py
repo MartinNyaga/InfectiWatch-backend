@@ -75,8 +75,8 @@ class Review(db.Model):
 class Donation(db.Model):
     __tablename__ = 'donations'
     id = db.Column(db.Integer, primary_key=True)
-    donor_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    recipient_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
+    donor_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    recipient_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
     amount = db.Column(db.Float, nullable=False)
 
 class Emergency(db.Model):
@@ -84,6 +84,6 @@ class Emergency(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     condition = db.Column(db.String)
-    sender_location = db.Column(db.String, db.ForeignKey('locations.id'), nullable=False)
-    sender_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    sender_location = db.Column(db.String, db.ForeignKey('locations.id'))
+    sender_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
