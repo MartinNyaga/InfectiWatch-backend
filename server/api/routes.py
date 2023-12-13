@@ -14,29 +14,6 @@ authorizations = {
 
 ns = Namespace("/", authorizations=authorizations)
 
-#ADMIN ROUTES
-# @ns.route("/roles")
-# class Roles(Resource):
-#     method_decorators = [jwt_required()]
-
-#     @ns.doc(security="jsonWebToken")
-#     @ns.marshal_with(role_model)
-#     def get(self):
-#         roles = Role.query.all()
-#         return roles, 200
-  
-# @ns.route("/admins/<int:id>")
-# class RolesId(Resource):
-#     method_decorators = [jwt_required()]
-
-#     @ns.doc(security="jsonWebToken")
-#     @ns.marshal_with(role_model)
-#     def get(self, id):
-#         roles = Role.query.filter_by(id=id).first()
-#         if roles:
-#             return roles, 200
-#         else:
-#             return {"error": "roles not found"}, 404
 
 
 #USERS ROUTES
