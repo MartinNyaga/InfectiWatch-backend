@@ -7,10 +7,12 @@ from .models import User, Location, Disease, Donation, Review, Disease_Location,
 from .api_models import (  user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model, user_login_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
+authorizations = {
+    "jsonWebToken": {"type": "apiKey", "in": "header", "name": "Authorization"}
+}
 
 
-
-ns = Namespace("/")
+ns = Namespace("/", authorizations=authorizations)
 
 #ADMIN ROUTES
 # @ns.route("/roles")
