@@ -2,10 +2,10 @@ from flask_restx import fields
 from api import rest_api
 
 # Admin Model
-role_model = rest_api.model("Role", {
-    "id": fields.Integer,
-    "role_given": fields.String,
-})
+# role_model = rest_api.model("Role", {
+#     "id": fields.Integer,
+#     "role_given": fields.String,
+# })
 
 # User Model
 user_model = rest_api.model("User", {
@@ -15,7 +15,7 @@ user_model = rest_api.model("User", {
     "password_hash": fields.String,
     "created_at": fields.DateTime,
     "updated_at": fields.DateTime,
-    "role_id": fields.Integer,
+    # "role_id": fields.Integer,
 })
 
 #Input user model(Create User in sign up)
@@ -23,7 +23,7 @@ user_input_model = rest_api.model("User_Input", {
     "username": fields.String,
     "email": fields.String,
     "password_hash": fields.String,
-    "role_id": fields.Integer,
+    # "role_id": fields.Integer,
 })
 
 #Log in Model
