@@ -2,7 +2,7 @@ from faker import Faker
 import random
 from api import app
 
-from api.models import db, Role, User, Location, Disease, Disease_Location, Review, Donation, Emergency
+from api.models import db, User, Location, Disease, Disease_Location, Review, Donation, Emergency
 
 with app.app_context():
     fake = Faker()
@@ -400,7 +400,7 @@ with app.app_context():
             username=fake.name(),
             email=fake.email(),
             password_hash=fake.password(),
-            role_id = random.randint(1, len(Role.query.all())),
+            # role_id = random.randint(1, len(Role.query.all())),
             created_at=fake.date_time(),
             updated_at=fake.date_time(),
         )
