@@ -7,34 +7,13 @@ from .models import User, Location, Disease, Donation, Review, Disease_Location,
 from .api_models import (  user_model, location_model, disease_model, disease_location_model, review_model, donation_model, user_input_model, location_input_model, disease_input_model, donation_input_model, review_input_model, emergency_model, emergency_input_model, user_login_model)
 from werkzeug.security import generate_password_hash, check_password_hash
 
+authorizations = {
+    "jsonWebToken": {"type": "apiKey", "in": "header", "name": "Authorization"}
+}
 
 
+ns = Namespace("/", authorizations=authorizations)
 
-ns = Namespace("/")
-
-#ADMIN ROUTES
-# @ns.route("/roles")
-# class Roles(Resource):
-#     method_decorators = [jwt_required()]
-
-#     @ns.doc(security="jsonWebToken")
-#     @ns.marshal_with(role_model)
-#     def get(self):
-#         roles = Role.query.all()
-#         return roles, 200
-  
-# @ns.route("/admins/<int:id>")
-# class RolesId(Resource):
-#     method_decorators = [jwt_required()]
-
-#     @ns.doc(security="jsonWebToken")
-#     @ns.marshal_with(role_model)
-#     def get(self, id):
-#         roles = Role.query.filter_by(id=id).first()
-#         if roles:
-#             return roles, 200
-#         else:
-#             return {"error": "roles not found"}, 404
 
 
 #USERS ROUTES
